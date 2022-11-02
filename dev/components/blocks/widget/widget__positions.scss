@@ -14,4 +14,24 @@
     justify-content: space-between;
     align-items: baseline;
   }
+
+  @media (max-width: 576px) {
+    &-couple {
+      flex-direction: column;
+      &:not(:last-child) {
+        position: relative;
+        margin-bottom: 40px;
+        &:after {
+          position: absolute;
+          content: '';
+          left: 50%;
+          bottom: -22px;
+          width: 80%;
+          height: 1px;
+          transform: translateX(-50%);
+          background-color: $border-color;
+        }
+      }
+    }
+  }
 }

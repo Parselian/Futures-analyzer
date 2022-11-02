@@ -55,4 +55,22 @@
     font-size: 46px;
     font-weight: 700
   }
+
+  @media (max-width: 576px) {
+    &-wrap {
+      margin-bottom: 20px;
+    }
+
+    &-circle {
+      width: 150px;
+      height: 150px;
+      border-width: 7px;
+    }
+    &-label {
+      margin-top: -15px;
+    }
+    &-percent {
+      font-size: 32px;
+    }
+  }
 }

@@ -8,4 +8,18 @@
       margin-bottom: 10px;
     }
   }
+
+  @media (max-width: 576px) {
+    &s {
+      width: 100%;
+      margin-right: 0;
+    }
+
+    &-wrap {
+      width: 100%;
+      label, input {
+        text-align: center;
+      }
+    }
+  }
 }

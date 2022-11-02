@@ -1,4 +1,9 @@
 .widget__main {
   margin-bottom: 40px;
   display: flex;
+
+  @media (max-width: 576px) {
+    align-items: center;
+    flex-direction: column-reverse;
+  }
 }
