@@ -1,0 +1,11 @@
+.widget__input {
+  &s {
+    margin-right: 40px;
+  }
+
+  &-wrap {
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+}

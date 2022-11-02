@@ -1,0 +1,17 @@
+.widget__positions {
+  padding: 20px;
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+
+  &-couple {
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+}

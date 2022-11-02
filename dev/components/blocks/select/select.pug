@@ -1,0 +1,9 @@
+mixin select(selectSize, id, defaultOptionLable, options, label)
+    .select__wrap(class=selectSize)
+        select(data-id=id).select
+            option(value='unset' selected disabled)=defaultOptionLable
+            each option in options
+                option(value=option.value selected=option.isSelected)=option.text
+        label.select__label=label
+        svg.select__icon
+            use(xlink:href="./assets/images/svg/symbol/sprite.svg#warning")

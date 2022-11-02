@@ -1,0 +1,21 @@
+.button {
+  cursor: pointer;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: none;
+  transition: .2s;
+
+  &_active {
+    color: $alt-text-color;
+    background-color: $active-color;
+  }
+
+  &:hover {
+    background-color: darken($active-color, 10);
+
+  }
+  &:active {
+    background-color: darken($active-color, 25);
+  }
+}

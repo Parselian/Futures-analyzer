@@ -1,8 +1,10 @@
 extends ../layouts/default
 
 block mixins
+    include ../components/blocks/widget/widget
 
 block content
+    +Widget(true)
 
 block scripts
-    script(src="assets/js/index.js")
+    script(src="/assets/js/index.js")

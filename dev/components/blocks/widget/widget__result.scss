@@ -1,0 +1,58 @@
+.widget__result {
+  &-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-circle {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 200px;
+    height: 200px;
+    text-align: center;
+    background-color: $accent-bg-color;
+    -webkit-border-radius: 1000px;
+    -moz-border-radius: 1000px;
+    border-radius: 1000px;
+    border: 10px solid transparent;
+
+    &_profitable {
+      border-color: $profit-color;
+
+      .widget {
+        &__result {
+          &-percent {
+            color: $profit-color;
+          }
+        }
+      }
+    }
+
+    &_lose {
+      border-color: $lose-color;
+
+      .widget {
+        &__result {
+          &-percent {
+            color: $lose-color;
+          }
+        }
+      }
+    }
+  }
+
+  &-label {
+    color: $inactive-text-color;
+    margin-top: -30px;
+    margin-bottom: 10px;
+    font-size: 14px
+  }
+
+  &-percent {
+    font-size: 46px;
+    font-weight: 700
+  }
+}

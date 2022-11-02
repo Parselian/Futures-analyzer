@@ -1,0 +1,26 @@
+.select {
+  &__wrap {
+    display: flex;
+    flex-direction: column;
+  }
+  padding: 7px 7px 5px 10px;
+  width: 100%;
+  order: 1;
+  font-size: 14px;
+  border: 1px solid $border-color;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+
+  &:focus {
+    border-color: $active-color;
+    color: $active-color;
+
+    & ~ label {
+      color: $active-color;
+    }
+  }
+}

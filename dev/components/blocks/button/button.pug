@@ -1,0 +1,4 @@
+mixin button(text, id, extraClasses, isActive)
+    - const statusClass = isActive === true ? 'button_active' : 'button_inactive'
+
+      button.button(id=id class=`${extraClasses} ${statusClass}`)= text
