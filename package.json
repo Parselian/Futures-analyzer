@@ -24,7 +24,8 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-svg-sprite": "^1.5.0",
     "gulp-svgmin": "^2.2.0",
-    "sass": "^1.54.0"
+    "sass": "^1.54.0",
+    "vinyl-ftp": "^0.6.1"
   },
   "dependencies": {
     "gulp-sass": "^5.1.0"
