@@ -1,6 +1,6 @@
 mixin input(selectSize, additionalClasses, type, id, label, defaultValue, isDisabled)
     .input__wrap(class=selectSize class=additionalClasses)
-        input(class="input" type=type data-id=id value=defaultValue placeholder=label disabled=isDisabled)
+        input(class="input" type=type min=0.1 data-id=id value=defaultValue placeholder=label disabled=isDisabled)
         label.input__label=label
         svg.select__icon
             use(xlink:href="./assets/images/svg/symbol/sprite.svg#warning")

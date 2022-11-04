@@ -4,49 +4,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputs = {}
 
   const getInputsAndInitListeners = () => {
-    document.querySelectorAll('input').forEach(input => {
+    const allMixedInputs = [...document.querySelectorAll('input'), ...document.querySelectorAll('select')]
+    allMixedInputs.forEach(input => {
       input.addEventListener('input', (e) => {
-        performProfitability(e.target)
+        performProfitability()
+        performHoldable()
       })
 
       inputs[input.getAttribute('data-id')] = input
     })
 
-    console.log(inputs)
+    performProfitability()
+    performHoldable()
   }
 
-  const performProfitability = (target) => {
-    let startCapital = parseFloat(inputs['start-capital'].value),
-      possibilityToGetProfit = parseFloat(inputs['possibility-to-get-profit'].value),
+  const performProfitability = () => {
+    let possibilityToGetProfit = parseFloat(inputs['possibility-to-get-profit'].value),
       startPercentFromCapital = parseFloat(inputs['start-percent-from-capital'].value),
-      profitInPercent = parseFloat(inputs['profit-in-percent'].value),
-      possibilityToLoseMoney = parseFloat(inputs['possibility-to-lose-money'].value)
+      profitInPercent = parseFloat(inputs['profit-in-percent'].value)
 
-    /*let stepsAmount = parseFloat(inputs['steps-amount'].value),
-      firstPositionOpenPrice = parseFloat(inputs['first-position-open-price'].value),
-      shoulder = parseFloat(inputs['shoulder'].value),
-      positionAmountToExtraBuy = parseFloat(inputs['position-amount-to-extra-buy'].value),
-      marketPrice = parseFloat(inputs['market-price'].value),
-      positionAmount = parseFloat(inputs['position-amount'].value),
-      positionInRealUSDT = parseFloat(inputs['position-in-real-USDT'].value)*/
-
-    if (target.getAttribute('data-id') === 'possibility-to-lose-money' && !isNaN(possibilityToLoseMoney)) {
-      inputs['possibility-to-get-profit'].value = (100 - possibilityToLoseMoney).toFixed(2)
-    }
-
-    if (target.getAttribute('data-id') === 'possibility-to-get-profit' && !isNaN(possibilityToGetProfit)) {
-      inputs['possibility-to-lose-money'].value = (100 - possibilityToGetProfit).toFixed(2)
-    }
-
-    const profitability = possibilityToGetProfit * (profitInPercent - 1) * startPercentFromCapital - (possibilityToLoseMoney * startPercentFromCapital)
-
-    const firstPart = possibilityToGetProfit * (profitInPercent - 1) * startPercentFromCapital,
-      secondPart = possibilityToLoseMoney * startPercentFromCapital,
-      result = firstPart - secondPart
-
-    console.log(result)
+    const profitability = possibilityToGetProfit * (profitInPercent - 1) * startPercentFromCapital - ((100 - possibilityToGetProfit) * startPercentFromCapital)
 
     renderProfitabilityLabel(profitability)
+  }
+
+  /*
+ * объём позиции = цена открытия / позиция в USDT
+ * объём позиции = цена открытия / позиция в USDT
+ * позиция в USDT = позиция в реальных USDT * плечо
+ * дозакупка =
+ * кол-во реальных USDT =
+ * */
+
+  const performHoldable = () => {
+    let shoulder1 = parseFloat(inputs['shoulder-1'].value),
+      positionInRealUSDT1 = parseFloat(inputs['position-in-real-USDT-1'].value),
+      shoulder2 = parseFloat(inputs['shoulder-2'].value),
+      firstPositionOpenPrice = parseFloat(inputs['first-position-open-price'].value),
+      positionInRealUSDT2 = parseFloat(inputs['position-in-real-USDT-2'].value),
+      usdtPosition1 = shoulder1 * positionInRealUSDT1 || parseFloat(inputs['USDT-position-1'].value)
+
+    inputs['USDT-position-1'].value = usdtPosition1
+    inputs['position-amount'].value = usdtPosition1 / firstPositionOpenPrice
   }
 
   const renderProfitabilityLabel = (result) => {
