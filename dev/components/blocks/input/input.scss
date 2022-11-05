@@ -119,6 +119,16 @@
   border-radius: 3px;
   cursor: pointer;
 
+  &_accent {
+    label {
+      color: $accent-input-color;
+    }
+    input {
+      background-color: $accent-input-bg-color;
+      border-color: $accent-input-bg-color;
+    }
+  }
+
   &_xs {
     width: 40px;
   }

@@ -11,7 +11,7 @@ mixin Widget(isResultNeed)
                     +input('input_m', 'widget__input-wrap', 'number', 'steps-amount', 'Кол-во шагов (усреднений):', 1, false)
                     +input('input_m', 'widget__input-wrap', 'number', 'profit-in-percent', '% прибыли:', 1, false)
                     +input('input_m', 'widget__input-wrap', 'number', 'possibility-to-get-profit', 'Вер-ть получ. профита, %:', 0.1, false)
-                    //+input('input_m', 'widget__input-wrap', 'number', 'possibility-to-lose-money', 'Вер-ть наступ. дерьма, %:', 0.1,false)
+                    +input('input_m', 'widget__input-wrap input_accent', 'number', 'possibility-to-lose-money', 'Тейк-профит', '', true)
                 if (isResultNeed)
                     .widget__result-wrap.widget__col
                         .widget__result-circle
