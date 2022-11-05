@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     database = {
       buyOrderRates: {
         VIP0: {
-          taker: 0.1,
-          maker: 0.1
+          taker: 0.1, //покупка
+          maker: 0.1 //продажа
         }
       },
       leverageAndMargin: {
@@ -113,6 +113,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     inputs['USDT-position-1'].value = usdtPosition1
     inputs['position-amount'].value = usdtPosition1 / firstPositionOpenPrice
+
+    const buyRateRealUSDT = (positionInRealUSDT1 / 100) * 0.1, //Здесь праааавильно :)
+      firstMargin = inputs['position-amount'].value * firstPositionOpenPrice * (1 / shoulder1) //И здееесь праавильно :)
+
+    /*const supportingMargin = firstPositionOpenPrice * database.leverageAndMargin.level1.supportingMarginRate
+      - database.leverageAndMargin.level1.amountOfCollateral,
+    sumOfMargins = firstMargin + supportingMargin*/
+
+    console.dir({buyRateRealUSDT, firstMargin})
   }
 
   const renderProfitabilityLabel = (result) => {

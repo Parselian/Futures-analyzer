@@ -6,7 +6,7 @@ mixin Widget(isResultNeed)
         .widget(id="widget-main")
             .widget__main
                 .widget__inputs.widget__col
-                    +input('input_m', 'widget__input-wrap', 'number', 'start-capital', 'Начальный капитал:', 100, false)
+                    +input('input_m', 'widget__input-wrap', 'number', 'start-capital', 'Начальный капитал (USDT):', 100, false)
                     +input('input_m', 'widget__input-wrap', 'number', 'start-percent-from-capital', 'Изнач. % от капитала:', 0.01, false)
                     +input('input_m', 'widget__input-wrap', 'number', 'steps-amount', 'Кол-во шагов (усреднений):', 1, false)
                     +input('input_m', 'widget__input-wrap', 'number', 'profit-in-percent', '% прибыли:', 1, false)
