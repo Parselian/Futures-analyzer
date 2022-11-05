@@ -1,5 +1,17 @@
 'use-strict'
 
+/*
+* объём позиции = цена открытия / позиция в USDT
+* объём позиции = цена открытия / позиция в USDT
+* позиция в USDT = позиция в реальных USDT * плечо
+* дозакупка =
+* кол-во реальных USDT =
+*
+* X = (Цена открытия 1ой позиции - цена по рынку) / (Цена открытия 1ой позиции / 100)
+* Если позиция упала на 50% => нужно усреднить позицию
+* Тейк-профит = объём позиции
+* */
+
 document.addEventListener('DOMContentLoaded', () => {
   const inputs = {},
     database = {
@@ -74,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let counter = 1
 
-      while(counter <= stepsAmount) {
+      while (counter <= stepsAmount) {
         buffer.push(startPercentFromCapital * Math.pow(2, counter))
         counter++
       }
@@ -92,18 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProfitabilityLabel(profitability)
   }
 
-  /*
- * объём позиции = цена открытия / позиция в USDT
- * объём позиции = цена открытия / позиция в USDT
- * позиция в USDT = позиция в реальных USDT * плечо
- * дозакупка =
- * кол-во реальных USDT =
- *
- * X = (Цена открытия 1ой позиции - цена по рынку) / (Цена открытия 1ой позиции / 100)
- * Если позиция упала на 50% => нужно усреднить позицию
- * Тейк-профит = объём позиции
- * */
-
   const performHoldable = () => {
     let shoulder1 = parseFloat(inputs['shoulder-1'].value),
       positionInRealUSDT1 = parseFloat(inputs['position-in-real-USDT-1'].value),
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const buyRateRealUSDT = (positionInRealUSDT1 / 100) * 0.1, //Здесь праааавильно :)
       firstMargin = positionAmount * firstPositionOpenPrice * (1 / shoulder1), //И здееесь праавильно :)
       profitAndLose = (marketPrice - firstPositionOpenPrice) * positionAmount, //Здесь тоже правильно :3
-      sellRate = ( (positionAmount * marketPrice) - (positionAmount * firstPositionOpenPrice) ) / 100 * 0.1 //Прааавильно)
+      sellRate = ((positionAmount * marketPrice) - (positionAmount * firstPositionOpenPrice)) / 100 * 0.1 //Прааавильно)
 
     console.dir({buyRateRealUSDT, firstMargin, profitAndLose, sellRate})
   }
