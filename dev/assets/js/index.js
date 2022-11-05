@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return buffer.reduce((prev, next) => prev + next, 0)
     }
 
-    if (calculateEfficiency() >= 100) {
+    if (calculateEfficiency() >= 90) {
       renderProfitabilityLabel(-999999)
       return
     }
