@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
  *
  * X = (Цена открытия 1ой позиции - цена по рынку) / (Цена открытия 1ой позиции / 100)
  * Если позиция упала на 50% => нужно усреднить позицию
+ * Тейк-профит = объём позиции
  * */
 
   const performHoldable = () => {
@@ -109,19 +110,19 @@ document.addEventListener('DOMContentLoaded', () => {
       shoulder2 = parseFloat(inputs['shoulder-2'].value),
       firstPositionOpenPrice = parseFloat(inputs['first-position-open-price'].value),
       positionInRealUSDT2 = parseFloat(inputs['position-in-real-USDT-2'].value),
-      usdtPosition1 = shoulder1 * positionInRealUSDT1 || parseFloat(inputs['USDT-position-1'].value)
+      usdtPosition1 = shoulder1 * positionInRealUSDT1 || parseFloat(inputs['USDT-position-1'].value),
+      marketPrice = parseFloat(inputs['market-price'].value),
+      positionAmount = usdtPosition1 / firstPositionOpenPrice
 
     inputs['USDT-position-1'].value = usdtPosition1
-    inputs['position-amount'].value = usdtPosition1 / firstPositionOpenPrice
+    inputs['position-amount'].value = positionAmount
 
     const buyRateRealUSDT = (positionInRealUSDT1 / 100) * 0.1, //Здесь праааавильно :)
-      firstMargin = inputs['position-amount'].value * firstPositionOpenPrice * (1 / shoulder1) //И здееесь праавильно :)
+      firstMargin = positionAmount * firstPositionOpenPrice * (1 / shoulder1), //И здееесь праавильно :)
+      profitAndLose = (marketPrice - firstPositionOpenPrice) * positionAmount, //Здесь тоже правильно :3
+      sellRate = ( (positionAmount * marketPrice) - (positionAmount * firstPositionOpenPrice) ) / 100 * 0.1 //Прааавильно)
 
-    /*const supportingMargin = firstPositionOpenPrice * database.leverageAndMargin.level1.supportingMarginRate
-      - database.leverageAndMargin.level1.amountOfCollateral,
-    sumOfMargins = firstMargin + supportingMargin*/
-
-    console.dir({buyRateRealUSDT, firstMargin})
+    console.dir({buyRateRealUSDT, firstMargin, profitAndLose, sellRate})
   }
 
   const renderProfitabilityLabel = (result) => {
