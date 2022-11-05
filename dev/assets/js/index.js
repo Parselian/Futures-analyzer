@@ -1,7 +1,52 @@
 'use-strict'
 
 document.addEventListener('DOMContentLoaded', () => {
-  const inputs = {}
+  const inputs = {},
+    database = {
+      buyOrderRates: {
+        VIP0: {
+          taker: 0.1,
+          maker: 0.1
+        }
+      },
+      leverageAndMargin: {
+        level1: {
+          positionPoolMin: 0,
+          positionPoolMx: 50000,
+          maxLeverage: 125,
+          supportingMarginRate: 0.4,
+          amountOfCollateral: 0
+        },
+        level2: {
+          positionPoolMin: 50000,
+          positionPoolMx: 250000,
+          maxLeverage: 100,
+          supportingMarginRate: 0.5,
+          amountOfCollateral: 50
+        },
+        level3: {
+          positionPoolMin: 250000,
+          positionPoolMx: 1000000,
+          maxLeverage: 50,
+          supportingMarginRate: 1,
+          amountOfCollateral: 1300
+        },
+        level4: {
+          positionPoolMin: 1000000,
+          positionPoolMx: 10000000,
+          maxLeverage: 20,
+          supportingMarginRate: 2.5,
+          amountOfCollateral: 16300
+        },
+        level5: {
+          positionPoolMin: 10000000,
+          positionPoolMx: 20000000,
+          maxLeverage: 10,
+          supportingMarginRate: 5,
+          amountOfCollateral: 266300
+        },
+      }
+    }
 
   const getInputsAndInitListeners = () => {
     const allMixedInputs = [...document.querySelectorAll('input'), ...document.querySelectorAll('select')]
@@ -22,6 +67,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let possibilityToGetProfit = parseFloat(inputs['possibility-to-get-profit'].value),
       startPercentFromCapital = parseFloat(inputs['start-percent-from-capital'].value),
       profitInPercent = parseFloat(inputs['profit-in-percent'].value)
+
+    function calculateEfficiency() {
+      const stepsAmount = parseFloat(inputs['steps-amount'].value),
+        buffer = [startPercentFromCapital]
+
+      let counter = 1
+
+      while(counter <= stepsAmount) {
+        buffer.push(startPercentFromCapital * Math.pow(2, counter))
+        counter++
+      }
+
+      return buffer.reduce((prev, next) => prev + next, 0)
+    }
+
+    if (calculateEfficiency() >= 100) {
+      renderProfitabilityLabel(-999999)
+      return
+    }
 
     const profitability = possibilityToGetProfit * (profitInPercent - 1) * startPercentFromCapital - ((100 - possibilityToGetProfit) * startPercentFromCapital)
 
@@ -70,5 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
       percentLabel.textContent = `0`
     }
   }
+
   getInputsAndInitListeners()
 })
