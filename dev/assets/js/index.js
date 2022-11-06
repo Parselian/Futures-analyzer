@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     database = {
       buyOrderRates: {
         VIP0: {
-          taker: 0.1, //покупка
-          maker: 0.1 //продажа
+          taker: 0.04, // покупка/продажа по рынку
+          maker: 0.02  // покупка/продажа по своей цене
         }
       },
       leverageAndMargin: {
@@ -114,15 +114,37 @@ document.addEventListener('DOMContentLoaded', () => {
       marketPrice = parseFloat(inputs['market-price'].value),
       positionAmount = usdtPosition1 / firstPositionOpenPrice
 
-    inputs['USDT-position-1'].value = usdtPosition1
+    inputs['USDT-position-1'].value = usdtPosition1.toFixed(1)
     inputs['position-amount'].value = positionAmount
 
-    const buyRateRealUSDT = (positionInRealUSDT1 / 100) * 0.1, //Здесь праааавильно :)
-      firstMargin = positionAmount * firstPositionOpenPrice * (1 / shoulder1), //И здееесь праавильно :)
-      profitAndLose = (marketPrice - firstPositionOpenPrice) * positionAmount, //Здесь тоже правильно :3
-      sellRate = ((positionAmount * marketPrice) - (positionAmount * firstPositionOpenPrice)) / 100 * 0.1 //Прааавильно)
+    let buyRateRealUSDT = (usdtPosition1 / 100) * database.buyOrderRates.VIP0.taker//Здесь праааавильно :)
 
-    console.dir({buyRateRealUSDT, firstMargin, profitAndLose, sellRate})
+    let profit = 0,
+      takeProfit = 0,
+      sellRate = ((positionAmount * marketPrice) / 100) * database.buyOrderRates.VIP0.taker,
+      counter = 1
+
+    while (profit < 1) {
+
+      profit = (positionAmount * (marketPrice + (100 * counter))) - (buyRateRealUSDT + sellRate)
+
+      let sellRateStep1 = marketPrice + (100 * counter),
+        sellRateStep2 = positionAmount * sellRateStep1,
+        sellRateStep3 = sellRateStep2 / 100,
+        sellRateFinalStep = sellRateStep3 * database.buyOrderRates.VIP0.taker
+
+      sellRate = sellRateFinalStep
+
+      if (profit >= 1) {
+        takeProfit = marketPrice
+        break;
+      }
+
+      // console.dir({sellRateStep1, sellRateStep2, sellRateStep3, sellRateFinalStep})
+      counter++
+    }
+
+    console.dir({buyRateRealUSDT, sellRate, profit, takeProfit})
   }
 
   const renderProfitabilityLabel = (result) => {
