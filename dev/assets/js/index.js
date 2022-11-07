@@ -105,7 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const performHoldable = () => {
-    let shoulder1 = parseFloat(inputs['shoulder-1'].value),
+    let startCapital = parseFloat(inputs['start-capital'].value),
+      profitInPercent = parseFloat(inputs['profit-in-percent'].value),
+      shoulder1 = parseFloat(inputs['shoulder-1'].value),
       positionInRealUSDT1 = parseFloat(inputs['position-in-real-USDT-1'].value),
       shoulder2 = parseFloat(inputs['shoulder-2'].value),
       firstPositionOpenPrice = parseFloat(inputs['first-position-open-price'].value),
@@ -117,34 +119,29 @@ document.addEventListener('DOMContentLoaded', () => {
     inputs['USDT-position-1'].value = usdtPosition1.toFixed(1)
     inputs['position-amount'].value = positionAmount
 
-    let buyRateRealUSDT = (usdtPosition1 / 100) * database.buyOrderRates.VIP0.taker//Здесь праааавильно :)
+    let buyRateRealUSDT = (usdtPosition1 / 100) * database.buyOrderRates.VIP0.taker,
+      sellRate = (positionAmount * marketPrice) / 100 * database.buyOrderRates.VIP0.taker,
+      profitValue = startCapital * (profitInPercent - 1) //Здесь праааавильно :)
 
-    let profit = 0,
+    let profit = (positionAmount * marketPrice) - (buyRateRealUSDT + sellRate),
       takeProfit = 0,
-      sellRate = ((positionAmount * marketPrice) / 100) * database.buyOrderRates.VIP0.taker,
       counter = 1
 
-    while (profit < 1) {
+    while (profit < profitValue) {
+      if (profit < profitValue) {
+        marketPrice = marketPrice + (100 * counter)
+        sellRate = (positionAmount * marketPrice) / 100 * database.buyOrderRates.VIP0.taker
+        profit = (positionAmount * marketPrice) - (buyRateRealUSDT + sellRate)
+      }
 
-      profit = (positionAmount * (marketPrice + (100 * counter))) - (buyRateRealUSDT + sellRate)
-
-      let sellRateStep1 = marketPrice + (100 * counter),
-        sellRateStep2 = positionAmount * sellRateStep1,
-        sellRateStep3 = sellRateStep2 / 100,
-        sellRateFinalStep = sellRateStep3 * database.buyOrderRates.VIP0.taker
-
-      sellRate = sellRateFinalStep
-
-      if (profit >= 1) {
+      if (profit >= profitValue) {
         takeProfit = marketPrice
         break;
       }
 
-      // console.dir({sellRateStep1, sellRateStep2, sellRateStep3, sellRateFinalStep})
       counter++
     }
-
-    console.dir({buyRateRealUSDT, sellRate, profit, takeProfit})
+    console.dir({buyRateRealUSDT, sellRate, profitValue, marketPrice, profit, takeProfit})
   }
 
   const renderProfitabilityLabel = (result) => {
