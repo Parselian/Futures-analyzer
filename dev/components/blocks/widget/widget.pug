@@ -12,6 +12,7 @@ mixin Widget(isResultNeed)
                     +input('input_m', 'widget__input-wrap', 'number', 'profit-in-percent', '% прибыли:', 1, false)
                     +input('input_m', 'widget__input-wrap', 'number', 'possibility-to-get-profit', 'Вер-ть получ. профита, %:', 0.1, false)
                     +input('input_m', 'widget__input-wrap input_accent', 'number', 'take-profit', 'Тейк-профит', '', true)
+                    +input('input_m', 'widget__input-wrap input_accent', 'number', 'percent-of-take-profit', 'Тейк-профит, %', '', true)
                 if (isResultNeed)
                     .widget__result-wrap.widget__col
                         .widget__result-circle
