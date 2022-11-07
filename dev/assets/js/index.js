@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
       takeProfit = 0,
       counter = 1
 
-    while (profit < profitValue) {
+    do {
       if (profit < profitValue) {
         marketPrice = marketPrice + (100 * counter)
         sellRate = (positionAmount * marketPrice) / 100 * database.buyOrderRates.VIP0.taker
@@ -136,11 +136,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (profit >= profitValue) {
         takeProfit = marketPrice
+        console.log(111)
         break;
       }
 
       counter++
     }
+    while (profit < profitValue)
+
+    inputs['take-profit'].value = takeProfit
+
     console.dir({buyRateRealUSDT, sellRate, profitValue, marketPrice, profit, takeProfit})
   }
 
