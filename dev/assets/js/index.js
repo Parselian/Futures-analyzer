@@ -75,29 +75,29 @@ class Widget {
       buyRateRealUSDT = (usdtPosition1 / 100) * this.database.buyOrderRates.VIP0.taker,
       sellRate = (positionAmount * marketPrice) / 100 * this.database.buyOrderRates.VIP0.taker,
       profitValue = startCapital * (profitInPercent - 1), //Здесь праааавильно :)
-      profit = (positionAmount * marketPrice) - (buyRateRealUSDT + sellRate),
-      takeProfit = 0,
-      counter = 1
+      profit = ((positionAmount * marketPrice) - (buyRateRealUSDT + sellRate)) - usdtPosition1,
+      takeProfit = null
 
     this.inputs['USDT-position-1'].value = usdtPosition1.toFixed(1)
     this.inputs['position-amount'].value = positionAmount
 
-    do {
+    for (let counter = 0; ; counter++) {
+      if (isNaN(profit) || isNaN(profitValue)) break
+
       if (profit < profitValue) {
         marketPrice = marketPrice + (100 * counter)
         sellRate = (positionAmount * marketPrice) / 100 * this.database.buyOrderRates.VIP0.taker
-        profit = (positionAmount * marketPrice) - (buyRateRealUSDT + sellRate)
+        profit = ((positionAmount * marketPrice) - (buyRateRealUSDT + sellRate)) - usdtPosition1
       }
 
       if (profit >= profitValue) {
         takeProfit = marketPrice
         console.log(111)
-        break;
+        break
       }
 
       counter++
     }
-    while (profit < profitValue)
 
     this.inputs['take-profit'].value = takeProfit
 
