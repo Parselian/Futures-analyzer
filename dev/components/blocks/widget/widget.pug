@@ -4,6 +4,7 @@ include ../select/select
 mixin Widget(isResultNeed)
     .widget__wrap.container
         .widget(id="widget-main")
+            h3.widget__title Рентабельность
             .widget__main
                 .widget__inputs.widget__col
                     +input('input_m', 'widget__input-wrap', 'number', 'start-capital', 'Начальный капитал (USDT):', 100, false)
@@ -11,46 +12,69 @@ mixin Widget(isResultNeed)
                     +input('input_m', 'widget__input-wrap', 'number', 'steps-amount', 'Кол-во шагов (усреднений):', 1, false)
                     +input('input_m', 'widget__input-wrap', 'number', 'profit-in-percent', '% прибыли:', 1, false)
                     +input('input_m', 'widget__input-wrap', 'number', 'possibility-to-get-profit', 'Вер-ть получ. профита, %:', 0.1, false)
-                    +input('input_m', 'widget__input-wrap input_accent', 'number', 'take-profit', 'Тейк-профит', '', true)
-                    +input('input_m', 'widget__input-wrap input_accent', 'number', 'percent-of-take-profit', 'Тейк-профит, %', '', true)
                 if (isResultNeed)
                     .widget__result-wrap.widget__col
                         .widget__result-circle
                             .widget__result-label Рентабельность:
                             .widget__result-percent 0
+        .widget(id="widget-main")
+            h3.widget__title Усреднение
             .widget__positions
                 .widget__positions-couples
                     .widget__positions-couple
-                        +input('input_s', 'widget__input-wrap', 'number', 'first-position-open-price', 'Цена открытия 1ой поз.:', 0.1, false)
-                        +input('input_s', 'widget__input-wrap', 'number', 'position-amount', 'Объём поз.:', '', true)
-                        +input('input_s', 'widget__input-wrap', 'number', 'position-in-real-USDT-1', 'Позиция в реал. USDT:', 0.1, false)
-                        //+input('input_s', 'widget__input-wrap', 'number', 'shoulder-1', 'Плечо:', 0.1, false)
-                        +select('input_s', 'widget__input-wrap', 'shoulder-1', 'Выберите плечо:', [
-                          {
-                            value: 10,
-                            isSelected: false,
-                            text: 10
-                          },
-                          {
-                            value: 20,
-                            isSelected: false,
-                            text: 20
-                          },
-                          {
-                            value: 30,
-                            isSelected: false,
-                            text: 30
-                          },
-                          {
-                            value: 40,
-                            isSelected: false,
-                            text: 40
-                          }
-                        ], 'Плечо')
-                        +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-1', 'Позиция в USDT', '', true)
+                        .widget__positions-couple-row.widget__positions-couple-row_center
+                            +select('input_m', 'widget__input-wrap', 'buy-in', 'Покупаем в:', [
+                              {
+                                value: 'short',
+                                isSelected: false,
+                                text: 'шорт'
+                              },
+                              {
+                                value: 'long',
+                                isSelected: false,
+                                text: 'лонг'
+                              }
+                            ], 'Покупаем в:')
+                        .widget__positions-couple-row
+                            +input('input_s', 'widget__input-wrap', 'number', 'first-position-open-price', 'Цена открытия 1ой поз.:', 0.1, false)
+                            +input('input_s', 'widget__input-wrap', 'number', 'position-amount', 'Объём поз.:', '', true)
+                            +input('input_s', 'widget__input-wrap', 'number', 'position-in-real-USDT-1', 'Позиция в реал. USDT:', 0.1, false)
+                            +select('input_s', 'widget__input-wrap', 'shoulder-1', 'Выберите плечо:', [
+                              {
+                                value: 10,
+                                isSelected: true,
+                                text: 10
+                              },
+                              {
+                                value: 20,
+                                isSelected: false,
+                                text: 20
+                              },
+                              {
+                                value: 30,
+                                isSelected: false,
+                                text: 30
+                              },
+                              {
+                                value: 40,
+                                isSelected: false,
+                                text: 40
+                              }
+                            ], 'Плечо')
+                            +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-1', 'Позиция в USDT', '', true)
+                        .widget__positions-couple-row.widget__positions-couple-row_center
+                            +input('input_m', 'widget__input-wrap input_accent', 'number', 'take-profit', 'Тейк-профит', '', true)
+                            +input('input_m', 'widget__input-wrap input_accent', 'number', 'percent-of-take-profit', 'Тейк-профит, %', '', true)
+                            +input('input_m', 'widget__input-wrap input_accent', 'number', 'stop-lose', 'Стоп-луз', '', true)
+                            +input('input_m', 'widget__input-wrap input_accent', 'number', 'percent-of-stop-lose', 'Стоп-луз, %', '', true)
+        .widget(id="widget-main")
+            h3.widget__title Удержание
+            .widget__positions
+                .widget__positions-couples
                     .widget__positions-couple
-                        +input('input_s', 'widget__input-wrap', 'number', 'market-price', 'Цена по рынку:', 0.1, false)
-                        +input('input_s', 'widget__input-wrap', 'number', 'position-amount-to-extra-buy', 'Объем поз. дозакупки:', '', true)
-                        +input('input_s', 'widget__input-wrap', 'number', 'position-in-real-USDT-2', 'Позиция в реал. USDT:', '', true)
-                        +input('input_s', 'widget__input-wrap', 'number', 'shoulder-2', 'Плечо:', '', true)
-                        +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-2', 'Позиция в USDT', '', true)
+                        .widget__positions-couple-row
+                            +input('input_s', 'widget__input-wrap', 'number', 'market-price', 'Цена по рынку:', 0.1, false)
+                            +input('input_s', 'widget__input-wrap', 'number', 'position-amount-to-extra-buy', 'Объем поз. дозакупки:', '', true)
+                            +input('input_s', 'widget__input-wrap', 'number', 'position-in-real-USDT-2', 'Позиция в реал. USDT:', '', true)
+                            +input('input_s', 'widget__input-wrap', 'number', 'shoulder-2', 'Плечо:', '', true)
+                            +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-2', 'Позиция в USDT', '', true)
