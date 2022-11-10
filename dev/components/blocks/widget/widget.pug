@@ -64,8 +64,6 @@ mixin Widget(isResultNeed)
                             ], 'Плечо', false)
                             +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-open', 'Позиция в USDT', '', true)
                             +button("Ок", "widget-open-button", 'widget__button', true)
-                            //svg(id="widget-open-button").widget__icon
-                            //    use(xlink:href="./assets/images/svg/symbol/sprite.svg#check")
         .widget(id="widget-main")
             h3.widget__title Усреднение
             .widget__positions
@@ -78,8 +76,7 @@ mixin Widget(isResultNeed)
                             +input('input_s', 'widget__input-wrap', 'number', 'shoulder-averaging', 'Плечо:', 10, true)
                             +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-averaging', 'Позиция в USDT', 100, true)
                             +button("Ок", "widget-averaging-button", 'widget__button', true)
-                            //svg(id="widget-averaging-button").widget__icon
-                            //    use(xlink:href="./assets/images/svg/symbol/sprite.svg#check")
+
         .widget(id="widget-position-now")
             h3.widget__title Позиция сейчас
             .widget__positions
