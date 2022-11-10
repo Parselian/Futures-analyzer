@@ -1,15 +1,11 @@
 'use-strict'
 
 /*
-* объём позиции = цена открытия / позиция в USDT
-* объём позиции = цена открытия / позиция в USDT
-* позиция в USDT = позиция в реальных USDT * плечо
-* дозакупка =
-* кол-во реальных USDT =
-*
-* X = (Цена открытия 1ой позиции - цена по рынку) / (Цена открытия 1ой позиции / 100)
-* Если позиция упала на 50% => нужно усреднить позицию
-* Тейк-профит = объём позиции
+* Ком. На покупку = (позиция в ЮСДТ / 100) * ком. Тейкера
+* Ком. На продажу = (объем позиции * цена по рынку) / 100 * 0.04
+* Профит = ((объем позиции * цена по рынку) – (ком. На покупку + ком. На продажу)) – позиция в ЮСДТ
+* Цена по рынку = позиция в ЮСДТ / объем дозакупки
+* Объем дозакупки = Цена по рынку / позиция в ЮСДТ
 * */
 
 class Widget {
@@ -26,6 +22,32 @@ class Widget {
       input.addEventListener('input', () => {
         this.performProfitability()
         this.performHoldable()
+      })
+    })
+
+    document.querySelectorAll('button').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const targetID = e.target.getAttribute('id')
+
+        if (targetID === "widget-open-button") {
+          this.inputs['market-price-position-now'].value = this.inputs['first-position-open-price'].value
+          this.inputs['to-extra-buy-position-now'].value = this.inputs['position-amount'].value
+          this.inputs['position-real-USDT-position-now'].value = this.inputs['position-in-real-USDT-open'].value
+          this.inputs['USDT-position-position-now'].value = this.inputs['USDT-position-open'].value
+        }
+
+        if (targetID === "widget-averaging-button") {
+          this.inputs['to-extra-buy-position-now'].value = parseFloat(this.inputs['to-extra-buy-position-now'].value)
+            + parseFloat(this.inputs['position-amount-to-extra-buy-averaging'].value)
+          this.inputs['position-real-USDT-position-now'].value = parseFloat(this.inputs['position-real-USDT-position-now'].value)
+            + parseFloat(this.inputs['position-in-real-USDT-averaging'].value)
+          this.inputs['USDT-position-position-now'].value = parseFloat(this.inputs['USDT-position-position-now'].value)
+            + parseFloat(this.inputs['USDT-position-averaging'].value)
+
+          console.log()
+          const marketPrice = this.inputs['USDT-position-position-now'].value / this.inputs['to-extra-buy-position-now'].value
+          this.inputs['market-price-position-now'].value = marketPrice.toFixed(2)
+        }
       })
     })
 
@@ -67,41 +89,45 @@ class Widget {
     let startCapital = parseFloat(this.inputs['start-capital'].value),
       profitInPercent = parseFloat(this.inputs['profit-in-percent'].value),
       shoulder1 = parseFloat(this.inputs['shoulder-1'].value),
-      positionInRealUSDT1 = parseFloat(this.inputs['position-in-real-USDT-1'].value),
+      positionInRealUSDT1 = parseFloat(this.inputs['position-in-real-USDT-open'].value),
+      shoulderAveraging = parseFloat(this.inputs['shoulder-averaging'].value),
+      positionInRealUSDTAveraging = parseFloat(this.inputs['position-in-real-USDT-averaging'].value),
+      typeOfPosition = this.inputs['type-of-position'].value,
       firstPositionOpenPrice = parseFloat(this.inputs['first-position-open-price'].value),
-      usdtPosition1 = shoulder1 * positionInRealUSDT1 || parseFloat(this.inputs['USDT-position-1'].value),
-      marketPrice = parseFloat(this.inputs['market-price'].value),
-      positionAmount = usdtPosition1 / firstPositionOpenPrice,
-      buyRateRealUSDT = (usdtPosition1 / 100) * this.database.buyOrderRates.VIP0.taker,
-      sellRate = (positionAmount * marketPrice) / 100 * this.database.buyOrderRates.VIP0.taker,
+      usdtPositionOpen = shoulder1 * positionInRealUSDT1 || parseFloat(this.inputs['USDT-position-open'].value),
+      usdtPositionAveraging = shoulderAveraging * positionInRealUSDTAveraging
+        || parseFloat(this.inputs['USDT-position-averaging'].value),
+      marketPriceClosing = parseFloat(this.inputs['market-price-closing'].value),
+      positionAmount = usdtPositionOpen / firstPositionOpenPrice,
+      buyRateRealUSDT = (usdtPositionOpen / 100) * this.database.buyOrderRates.VIP0.taker,
+      sellRate = (positionAmount * marketPriceClosing) / 100 * this.database.buyOrderRates.VIP0.taker,
       profitValue = startCapital * (profitInPercent - 1), //Здесь праааавильно :)
-      profit = ((positionAmount * marketPrice) - (buyRateRealUSDT + sellRate)) - usdtPosition1,
-      takeProfit = null
+      profit = ((positionAmount * marketPriceClosing) - usdtPositionOpen) - (buyRateRealUSDT + sellRate),
+      takeProfit = null,
+      stopLose = null
 
-    this.inputs['USDT-position-1'].value = usdtPosition1.toFixed(1)
+    this.inputs['USDT-position-averaging'].value = usdtPositionAveraging
+    this.inputs['position-amount-to-extra-buy-averaging'].value = parseFloat(this.inputs['USDT-position-averaging'].value)
+            / parseFloat(this.inputs['market-price-averaging'].value)
+
+    this.inputs['USDT-position-open'].value = usdtPositionOpen.toFixed(1)
     this.inputs['position-amount'].value = positionAmount
 
-    for (let counter = 0; ; counter++) {
-      if (isNaN(profit) || isNaN(profitValue)) break
-
-      if (profit < profitValue) {
-        marketPrice = marketPrice + (100 * counter)
-        sellRate = (positionAmount * marketPrice) / 100 * this.database.buyOrderRates.VIP0.taker
-        profit = ((positionAmount * marketPrice) - (buyRateRealUSDT + sellRate)) - usdtPosition1
-      }
-
-      if (profit >= profitValue) {
-        takeProfit = marketPrice
-        console.log(111)
-        break
-      }
-
-      counter++
+    if (profit > 1) {
+      this.inputs['judgement'].value = 'Да'
+    } else {
+      this.inputs['judgement'].value = 'Нет'
     }
 
-    this.inputs['take-profit'].value = takeProfit
+    /*
+    * ЗДЕСЬ БЫЛ ЦИКЛ FOR (ищи внизу )
+    * */
 
-    console.dir({buyRateRealUSDT, sellRate, profitValue, marketPrice, profit, takeProfit})
+    this.inputs['take-profit'].value = takeProfit
+  }
+
+  performMarketPriceOfPositionNowForm() {
+
   }
 
   renderProfitabilityLabel(result) {
@@ -176,3 +202,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   widget.init()
 })
+
+
+/*
+* ЭТО ЦИКЛ FOR, КОТОРЫЙ БЫЛ НАВЕРХУ ^
+* */
+
+/*
+for (let counter = 0; ; counter++) {
+  if (isNaN(profit) || isNaN(profitValue)) break
+
+  if (profit < profitValue) {
+    if (typeOfPosition === 'long') {
+      marketPriceClosing = marketPriceClosing + (100 * counter)
+    } else {
+      marketPriceClosing = marketPriceClosing - (100 * counter)
+    }
+
+
+    sellRate = (positionAmount * marketPriceClosing) / 100 * this.database.buyOrderRates.VIP0.taker
+    profit = ((positionAmount * marketPriceClosing) - usdtPositionOpen) - (buyRateRealUSDT + sellRate)
+  }
+
+  if (profit >= profitValue) {
+    takeProfit = marketPriceClosing
+    console.log(111)
+    break
+  }
+
+  counter++
+}*/
