@@ -1,5 +1,6 @@
 include ../input/input
 include ../select/select
+include ../button/button
 
 mixin Widget(isResultNeed)
     .widget__wrap.container
@@ -18,12 +19,12 @@ mixin Widget(isResultNeed)
                             .widget__result-label Рентабельность:
                             .widget__result-percent 0
         .widget(id="widget-main")
-            h3.widget__title Усреднение
+            h3.widget__title Открытие
             .widget__positions
                 .widget__positions-couples
                     .widget__positions-couple
                         .widget__positions-couple-row.widget__positions-couple-row_center
-                            +select('input_m', 'widget__input-wrap', 'buy-in', 'Покупаем в:', [
+                            +select('input_m', 'widget__input-wrap', 'type-of-position', 'Покупаем в:', [
                               {
                                 value: 'short',
                                 isSelected: false,
@@ -31,14 +32,14 @@ mixin Widget(isResultNeed)
                               },
                               {
                                 value: 'long',
-                                isSelected: false,
+                                isSelected: true,
                                 text: 'лонг'
                               }
-                            ], 'Покупаем в:')
+                            ], 'Покупаем в:', true)
                         .widget__positions-couple-row
                             +input('input_s', 'widget__input-wrap', 'number', 'first-position-open-price', 'Цена открытия 1ой поз.:', 0.1, false)
                             +input('input_s', 'widget__input-wrap', 'number', 'position-amount', 'Объём поз.:', '', true)
-                            +input('input_s', 'widget__input-wrap', 'number', 'position-in-real-USDT-1', 'Позиция в реал. USDT:', 0.1, false)
+                            +input('input_s', 'widget__input-wrap', 'number', 'position-in-real-USDT-open', 'Позиция в реал. USDT:', 0.1, false)
                             +select('input_s', 'widget__input-wrap', 'shoulder-1', 'Выберите плечо:', [
                               {
                                 value: 10,
@@ -60,21 +61,46 @@ mixin Widget(isResultNeed)
                                 isSelected: false,
                                 text: 40
                               }
-                            ], 'Плечо')
-                            +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-1', 'Позиция в USDT', '', true)
-                        .widget__positions-couple-row.widget__positions-couple-row_center
-                            +input('input_m', 'widget__input-wrap input_accent', 'number', 'take-profit', 'Тейк-профит', '', true)
-                            +input('input_m', 'widget__input-wrap input_accent', 'number', 'percent-of-take-profit', 'Тейк-профит, %', '', true)
-                            +input('input_m', 'widget__input-wrap input_accent', 'number', 'stop-lose', 'Стоп-луз', '', true)
-                            +input('input_m', 'widget__input-wrap input_accent', 'number', 'percent-of-stop-lose', 'Стоп-луз, %', '', true)
+                            ], 'Плечо', false)
+                            +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-open', 'Позиция в USDT', '', true)
+                            +button("Ок", "widget-open-button", 'widget__button', true)
+                            //svg(id="widget-open-button").widget__icon
+                            //    use(xlink:href="./assets/images/svg/symbol/sprite.svg#check")
         .widget(id="widget-main")
-            h3.widget__title Удержание
+            h3.widget__title Усреднение
             .widget__positions
                 .widget__positions-couples
                     .widget__positions-couple
                         .widget__positions-couple-row
-                            +input('input_s', 'widget__input-wrap', 'number', 'market-price', 'Цена по рынку:', 0.1, false)
-                            +input('input_s', 'widget__input-wrap', 'number', 'position-amount-to-extra-buy', 'Объем поз. дозакупки:', '', true)
-                            +input('input_s', 'widget__input-wrap', 'number', 'position-in-real-USDT-2', 'Позиция в реал. USDT:', '', true)
-                            +input('input_s', 'widget__input-wrap', 'number', 'shoulder-2', 'Плечо:', '', true)
-                            +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-2', 'Позиция в USDT', '', true)
+                            +input('input_s', 'widget__input-wrap', 'number', 'market-price-averaging', 'Цена по рынку:', 100, false)
+                            +input('input_s', 'widget__input-wrap', 'number', 'position-amount-to-extra-buy-averaging', 'Объем поз. дозакупки:', 1, true)
+                            +input('input_s', 'widget__input-wrap', 'number', 'position-in-real-USDT-averaging', 'Позиция в реал. USDT:', 10, false)
+                            +input('input_s', 'widget__input-wrap', 'number', 'shoulder-averaging', 'Плечо:', 10, true)
+                            +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-averaging', 'Позиция в USDT', 100, true)
+                            +button("Ок", "widget-averaging-button", 'widget__button', true)
+                            //svg(id="widget-averaging-button").widget__icon
+                            //    use(xlink:href="./assets/images/svg/symbol/sprite.svg#check")
+        .widget(id="widget-position-now")
+            h3.widget__title Позиция сейчас
+            .widget__positions
+                .widget__positions-couples
+                    .widget__positions-couple
+                        .widget__positions-couple-row
+                            +input('input_s', 'widget__input-wrap', 'number', 'market-price-position-now', 'Цена по рынку:', 0.1, false)
+                            +input('input_s', 'widget__input-wrap', 'number', 'to-extra-buy-position-now', 'Объем поз. дозакупки:', '', true)
+                            +input('input_s', 'widget__input-wrap', 'number', 'position-real-USDT-position-now', 'Позиция в реал. USDT:', '', true)
+                            +input('input_s', 'widget__input-wrap', 'number', 'USDT-position-position-now', 'Позиция в USDT', '', true)
+        .widget(id="widget-main")
+            h3.widget__title Закрытие
+            .widget__positions
+                .widget__positions-couples
+                    .widget__positions-couple
+                        .widget__positions-couple-row.widget__positions-couple-row_center
+                            +input('input_s', 'widget__input-wrap', 'number', 'market-price-closing', 'Цена по рынку:', 0.1, false)
+                            +input('input_s', 'widget__input-wrap', 'number', 'position-amount-closing', 'Позиция в USDT:', '', true)
+                        .widget__positions-couple-row
+                            +input('input_s', 'widget__input-wrap input_accent', 'number', 'take-profit', 'Тейк-профит', '', true)
+                            +input('input_s', 'widget__input-wrap input_accent', 'number', 'percent-of-take-profit', 'Тейк-профит, %', '', true)
+                            +input('input_s', 'widget__input-wrap input_accent', 'number', 'stop-lose', 'Стоп-луз', '', true)
+                            +input('input_s', 'widget__input-wrap input_accent', 'number', 'percent-of-stop-lose', 'Стоп-луз, %', '', true)
+                            +input('input_s', 'widget__input-wrap input_accent', 'text', 'judgement', 'Продавать?', '', true)

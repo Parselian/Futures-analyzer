@@ -1,6 +1,6 @@
-mixin select(selectSize, additionalClasses, id, defaultOptionLable, options, label)
+mixin select(selectSize, additionalClasses, id, defaultOptionLable, options, label, isDisabled)
     .select__wrap(class=selectSize class=additionalClasses)
-        select(data-id=id).select
+        select(data-id=id disabled=isDisabled).select
             option(value='unset' selected disabled)=defaultOptionLable
             each option in options
                 option(value=option.value selected=option.isSelected)=option.text
